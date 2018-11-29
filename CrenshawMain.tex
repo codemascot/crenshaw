@@ -1,0 +1,338 @@
+\documentclass[10pt,twosided]{book}
+
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\renewcommand{\rmdefault}{ptm}
+\usepackage[scaled=0.94]{helvet}
+\usepackage[subscriptcorrection,slantedGreek,nofontinfo,mtpcal]{mtpro2}
+\usepackage{datetime}
+\usepackage{nextpage} % Used to access \cleartooddpage
+
+\usepackage[x11names]{xcolor}
+\usepackage{booktabs}
+\usepackage{makeidx}
+\usepackage[page,header,title,titletoc]{appendix}
+\renewcommand{\appendixpagename}{Appendices}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{amsthm}
+
+\usepackage{kbordermatrix}
+\usepackage[paperwidth=6in,paperheight=9in,top=1in,left=0.66in,right=0.66in,textheight=6.8in,bindingoffset=5mm,twoside]{geometry}
+\usepackage{subfigure}
+\usepackage[utopia]{quotchap}  % Sets the chapter heading style
+\usepackage{wrapfig}
+\usepackage[inline]{asymptote}
+
+\usepackage{pgfplots}
+\usepackage{chemarr}
+
+\usepackage{enumerate}
+\usepackage{float}
+\usepackage[small]{caption} \setlength{\captionmargin}{20pt}
+\usepackage{colortbl}
+\usepackage{rotating}
+
+\usepackage[pdftex,
+            pdfauthor={Herbert M Sauro},
+            pdftitle={Enzyme Kinetics for Systems Biology},
+            pdfsubject={Systems and Synthetic Biology},
+            pdfkeywords={Systems Synthetic Biology Enzyme Kinetics},
+            pdfproducer={Latex with hyperref},
+            pdfcreator={pdflatex}]{hyperref}
+
+\pdfinfo{
+   /CreationDate (D:20070102000000)
+   /ModDate (D:\pdfdate)
+}
+
+\usepackage{fancyhdr}
+\usepackage{afterpage}
+
+\usepackage{tikz}
+\usetikzlibrary{arrows,plotmarks}
+\usetikzlibrary{matrix}
+%\usetikzlibrary{external}
+%\tikzexternalize[prefix=figures/] % activate!
+
+\usepackage[calcwidth]{titlesec}
+\titleformat{\section}[hang]{\sffamily\bfseries\color{black}}
+ {\Large\thesection}{12pt}{\Large}[{\titlerule[1pt]}]
+
+\titleformat{\subsection}
+{\sffamily\large\bfseries}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}
+{\normalfont\normalsize\bfseries}{\thesubsubsection}{1em}{}
+
+\newcount\drawfigs
+\drawfigs=1
+\newcount\draftVersion
+\draftVersion=0
+
+% --------------------------------------------
+% Comment this out for the print version !!!!!
+% --------------------------------------------
+%\hypersetup{backref,
+%colorlinks=true,
+%citecolor=blue,
+%linkcolor=BrickRed,
+%pdfauthor={Copyright \textcopyright\ Herbert M Sauro}}
+
+% Use this for printing
+\hypersetup{backref,
+colorlinks=true,
+citecolor=black,
+linkcolor=black,
+pdfauthor={Copyright \textcopyright\ Herbert M Sauro}}
+
+\definecolor{chaptergrey}{rgb}{0.4,0.4,0.4} % Change the color of the chapter number
+\definecolor{lightgrey}{rgb}{0.2,0.2,0.2} % Change the color of the chapter number
+\definecolor{colorA}{cmyk}{0.1,0.05,0,0}
+\definecolor{colorB}{cmyk}{0.73,0.19,0,0}
+\definecolor{ChapterTitleColor}{rgb}{0.55,0.0,0.0}
+\definecolor{BrickRed}{rgb}{0.72,0.0,0.0}
+\definecolor{orangePink}{cmyk}{0, 0.4, 0.4, 0.0}
+
+\definecolor{darkred}{rgb}{0.5,0,0}
+\definecolor{darkgreen}{rgb}{0,0.5,0}
+\definecolor{darkblue}{rgb}{0,0,0.5}
+
+%% first reset the headers and footers
+\fancyhead{}
+\fancyfoot{}
+%% make the odd pages have the section name on the top right
+\fancyhead[LO]{\sffamily\bfseries \rightmark}
+\fancyhead[RO]{\sffamily\bfseries \thepage}
+
+%% make the even pages have the chapter name on the top left
+\fancyhead[RE]{\sffamily\bfseries \leftmark}
+\fancyhead[LE]{\sffamily\bfseries \thepage}
+
+\fancypagestyle{plain}{
+\fancyhf{}
+\fancyfoot[RO]{
+{\hspace{\textwidth}
+{{\rule{0cm}{4mm}\color{black}{\bfseries \thepage}}}}}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0.5pt}
+}
+
+\newcommand\myclearpage{\cleartooddpage
+ [\thispagestyle{empty}]}
+
+\newcommand{\bL}{\mbox{\boldmath $L$}}
+\newcommand{\Transpose}[1]{#1^\mathsf{T}}
+
+\parindent=0pt
+\setlength{\parskip}{4pt}
+
+\definecolor{linecolor}{HTML}{0074C8}
+\newcommand{\hrulethick}{\leaders\hrule height 3.5pt depth -2pt\hfill}
+\newtheoremstyle{itexmp}%
+ {\topsep}
+ {\topsep}
+ {\normalfont\small}
+ {0pt}
+ {\itshape\bfseries}{}
+ { }
+ {#1 \textbf{#2} \enskip {\color{linecolor}\hrulethick}\\[6pt]}
+\theoremstyle{itexmp}
+\newtheorem{exmp}{Example}[chapter]
+
+\newcommand{\stateEquation}[2][0.96\textwidth]{
+\begin{center}
+ \par\noindent\tikzstyle{mybox} = [draw=green!70!black,fill=green!10,thick,rectangle,rounded corners,inner ysep=4pt]
+ \begin{tikzpicture}
+  \node [mybox] (box){%
+   \begin{minipage}{#1}{#2}\end{minipage}
+  };
+ \end{tikzpicture}
+ \end{center}
+}
+
+\newcommand{\stateHighlight}[2][0.96\textwidth]{
+ \par\noindent\tikzstyle{mybox} = [draw=Gold1!70!black,fill=Gold1!20,thick,rectangle,rounded corners,inner ysep=8pt]
+ \begin{tikzpicture}
+  \node [mybox] (box){%
+    \begin{minipage}{#1}{#2}\end{minipage}
+  };
+ \end{tikzpicture}
+}
+
+\newcommand{\stateComment}[2][0.96\textwidth]{
+ \par\noindent\tikzstyle{mybox} = [draw=green!70!black,fill=green!5,thick,rectangle,rounded corners,inner ysep=5pt]
+ \begin{tikzpicture}
+  \node [mybox] (box){%
+   \begin{minipage}{#1}{#2}\end{minipage}
+  };
+ \end{tikzpicture}
+}
+
+
+\pdfinfo{
+   /Author (Herbert M. Sauro)
+   /Title  (Let's Build a Compiler)
+   /CreationDate (D:20070102000000)
+   /Subject (Computer Science)
+   /Keywords (Compilers)
+   /ModDate (D:\pdfdate)
+}
+
+\makeatletter
+\newcommand*{\OneHalf}{%
+  \begingroup
+    \@namedef{OneHalf@\rmdefault}{lmr}%
+    \@namedef{OneHalf@\sfdefault}{lmss}%
+    \@namedef{OneHalf@\ttdefault}{lmtt}%
+    \@ifundefined{OneHalf@\f@family}{%
+      \fontfamily{lmr}%
+    }{\fontfamily{\@nameuse{OneHalf@\f@family}}}%
+    \fontencoding{TS1}%
+    \selectfont
+    \textonehalf
+  \endgroup
+}
+
+\makeatletter\newenvironment{graybox}{%
+   \begin{lrbox}{\@tempboxa}\begin{minipage}{\columnwidth}}{\end{minipage}\end{lrbox}%
+   \colorbox[gray]{0.85}{\usebox{\@tempboxa}}
+}\makeatother
+
+\makeatletter\newenvironment{mycolorbox}{%
+   \begin{lrbox}{\@tempboxa}\begin{minipage}{\columnwidth}}{\end{minipage}\end{lrbox}%
+   \colorbox{orangePink}{\usebox{\@tempboxa}}
+}\makeatother
+
+\makeatletter
+\def\thickhrulefill{\leavevmode \leaders \hrule height 1pt\hfill \kern \z@}
+\def\maketitle{%
+  \null
+  \thispagestyle{empty}%
+  \vskip 1cm
+  \begin{center}
+    \normalfont\LARGE\@author\par
+  \end{center}
+  \ifhmode\par\fi
+  \vskip 1cm
+  \hbox to \hsize{\hfill
+    \vrule height 2pt width.5\hsize
+    \hfill}%
+  \vskip 1cm
+  \begin{center}
+    \huge \strut \@title \par
+  \end{center}
+  \par
+  \vfil
+  \vfil
+  \null
+  \begin{center}
+    \large \strut \@date \par
+  \end{center}
+  \cleardoublepage
+  }
+\makeatother
+
+
+\makeatletter
+\renewcommand*\l@section{\@dottedtocline{1}{1.5em}{3em}}
+\renewcommand*\l@subsection{\@dottedtocline{1}{5em}{3em}}
+\makeatother
+
+\makeindex
+\renewcommand{\indexname}{\bfseries\slshape\sffamily Index}
+\renewcommand{\bibname}{\bfseries\slshape\sffamily References}
+\renewcommand{\contentsname}{\bfseries\slshape\sffamily Contents}
+
+% -----------------------------------------------------------------------------------------------
+\begin{document}
+
+\frontmatter
+
+\thispagestyle{empty}
+
+\begin{center}
+\textbf{\sffamily\Large \phantom{Ix}}\\
+%\textbf{\sffamily\Large \phantom{Ix}}\\
+%\textbf{\sffamily\Large \phantom{Ix}}\\
+%\textbf{\sffamily\Large \phantom{Ix}}\\
+%\textbf{\sffamily\Large \phantom{Ix}}\\
+\textbf{\sffamily\Large Let's Build a Compiler}\\
+\sffamily\Large By Jack W. Crenshaw
+\rule{\linewidth}{0.5mm}
+\end{center}
+
+\vspace{0.3in}
+
+
+\vspace{0.4in}
+
+\begin{center}
+{\em\hfill\large Copyright \copyright 1988 Jack W. Crenshaw}\\
+\end{center}
+
+\vspace{1in}
+Texified by Herbert M Sauro (2011)
+
+\vspace{1in}
+
+Typeset using \LaTeX\ 2$_\varepsilon$, WinEdt\\
+and 11pt Math Time Professional 2 Fonts
+\vskip10pt
+
+\tableofcontents
+
+\mainmatter
+
+\pagestyle{fancy}
+
+\vspace{1in}
+
+{\Large
+\begin{center}
+LET'S BUILD A COMPILER!\\ 
+\medskip
+By \\
+\medskip 
+Copyright \copyright\ Jack W. Crenshaw, Ph.D.\\ 
+\medskip
+24 July 1988
+\end{center} }
+
+
+\bigskip
+
+\include{tutor1}
+\include{tutor2}
+\include{tutor3}
+\include{tutor4}
+\include{tutor5}
+\include{tutor6}
+\include{tutor7}
+\include{tutor8}
+\include{tutor9}
+\include{tutor10}
+\include{tutor11}
+\include{tutor12}
+\include{tutor13}
+\include{tutor14}
+\include{tutor15}
+\include{tutor16}
+
+
+\cleardoublepage
+\phantomsection
+
+\end{document}
+
+
+
+
+
+
+
+
+
+
+
+
